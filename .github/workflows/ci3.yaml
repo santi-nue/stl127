@@ -77,21 +77,37 @@ jobs:
         run: |
           buildozer -v android debug
 
+ 
       - name: Repair NDK compiler permissions if build failed
         if: failure()
         run: |
-          find ~/.buildozer/android/platform -type f \( \
-            -name "clang*" -o \
-            -name "llvm-*" -o \
-            -name "ld*" -o \
-            -name "gcc*" \
-          \) -exec chmod +x {} \;
+          set -x
+
+          for dir in \
+            "$HOME/.buildozer" \
+            "$GITHUB_WORKSPACE/.buildozer" \
+            "/home/runner/.buildozer"; do
+            if [ -d "$dir" ]; then
+              echo "Repairing executables in: $dir"
+              find "$dir" -type f \( \
+                -name "clang*" -o \
+                -name "clang++*" -o \
+                -name "llvm-*" -o \
+                -name "ld*" -o \
+                -name "gcc*" \
+              \) -exec chmod +x {} \;
+            else
+              echo "Skipping missing directory: $dir"
+            fi
+          done
 
       - name: Retry build after repairing NDK permissions
         if: failure()
         run: |
           rm -rf .buildozer/android/platform/build-armeabi-v7a
           buildozer -v android debug
+      
+      
 
       - name: Upload debug APK
         if: success()
