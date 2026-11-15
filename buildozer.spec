@@ -88,10 +88,10 @@ fullscreen = 0
 android.api = 30
 
 # (int) Minimum API required
-android.minapi = 21
+android.minapi = 25
 
 # (str) Android NDK version to use
-android.ndk = 21
+android.ndk = 25b
 
 # (bool) Use --private data storage (True) or --dir public storage (False)
 # android.private_storage = True
