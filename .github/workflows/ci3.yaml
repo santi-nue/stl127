@@ -60,7 +60,7 @@ jobs:
       - name: Show versions
         run: |
           python --version
-          buildozer --version
+          python -m buildozer --version
           java -version
 
       - name: Clean previous Buildozer build
@@ -69,15 +69,14 @@ jobs:
 
       - name: Accept Android SDK licenses
         run: |
-          yes | buildozer android update || true
+          yes | python -m buildozer android update || true
 
       - name: Build ARMv7 debug APK
         env:
           BUILDOZER_ALLOW_ORG_TEST_DOMAIN: "1"
         run: |
-          buildozer -v android debug
+          python -m buildozer -v android debug
 
- 
       - name: Repair NDK compiler permissions if build failed
         if: failure()
         run: |
@@ -105,9 +104,7 @@ jobs:
         if: failure()
         run: |
           rm -rf .buildozer/android/platform/build-armeabi-v7a
-          buildozer -v android debug
-      
-      
+          python -m buildozer -v android debug
 
       - name: Upload debug APK
         if: success()
